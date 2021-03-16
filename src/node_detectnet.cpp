@@ -185,6 +185,8 @@ int main(int argc, char **argv)
 	float mean_pixel = 0.0f;
 	float threshold  = DETECTNET_DEFAULT_THRESHOLD;
 
+	int subscriber_queue_length = 5;
+
 	ROS_DECLARE_PARAMETER("model_name", model_name);
 	ROS_DECLARE_PARAMETER("model_path", model_path);
 	ROS_DECLARE_PARAMETER("prototxt_path", prototxt_path);
@@ -195,6 +197,7 @@ int main(int argc, char **argv)
 	ROS_DECLARE_PARAMETER("overlay_flags", overlay_str);
 	ROS_DECLARE_PARAMETER("mean_pixel_value", mean_pixel);
 	ROS_DECLARE_PARAMETER("threshold", threshold);
+	ROS_DECLARE_PARAMETER("subscriber_queue_length", subscriber_queue_length);
 
 
 	/*
@@ -210,6 +213,7 @@ int main(int argc, char **argv)
 	ROS_GET_PARAMETER("overlay_flags", overlay_str);
 	ROS_GET_PARAMETER("mean_pixel_value", mean_pixel);
 	ROS_GET_PARAMETER("threshold", threshold);
+	ROS_GET_PARAMETER("subscriber_queue_length", subscriber_queue_length);
 
 	overlay_flags = detectNet::OverlayFlagsFromStr(overlay_str.c_str());
 
@@ -305,7 +309,7 @@ int main(int argc, char **argv)
 	/*
 	 * subscribe to image topic
 	 */
-	auto img_sub = ROS_CREATE_SUBSCRIBER(sensor_msgs::Image, "image_in", 5, img_callback);
+	auto img_sub = ROS_CREATE_SUBSCRIBER(sensor_msgs::Image, "image_in", subscriber_queue_length, img_callback);
 
 	
 	/*
